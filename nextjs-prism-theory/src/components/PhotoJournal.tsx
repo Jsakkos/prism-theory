@@ -19,6 +19,7 @@ interface Photo {
     dateTaken: string; // Now in YYYY-MM-DD format
     location: string;
     description?: string;
+    alt: string;
 }
 interface SanityImage {
     asset: {
