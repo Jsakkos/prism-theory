@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     try {
         const { name, email, message } = await request.json();
 
-        const data = await resend.emails.send({
+        await resend.emails.send({
             from: 'contact@prism-theory.com',
             to: 'jonathansakkos@gmail.com',
             subject: `New contact form submission from ${name}`,
@@ -19,7 +19,8 @@ Message: ${message}
         });
 
         return NextResponse.json({ message: 'Email sent successfully' });
-    } catch (error) {
+    } catch (error: unknown) {
+        console.error('Failed to send email:', error);
         return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
     }
 }

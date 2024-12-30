@@ -75,7 +75,8 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
                 setIsContactOpen(false);
                 alert('Message sent successfully!');
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Failed to send message:', err);
             alert('Failed to send message. Please try again.');
         }
         setIsSubmitting(false);
@@ -135,9 +136,11 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
                 slides={lightboxPhotos}
                 render={{
                     slide: ({ slide }) => (
-                        <img
+                        <Image
                             src={slide.src}
                             alt={slide.alt || ''}
+                            width={2400}
+                            height={1600}
                             style={{ objectFit: 'contain', width: '100%', height: '100%' }}
                         />
                     )

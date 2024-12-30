@@ -28,32 +28,6 @@ export default function ContactForm({
 }: ContactFormProps) {
     if (!isOpen) return null;
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to send message');
-            }
-
-            setFormData({ name: '', email: '', message: '' });
-            isOpen(false);
-            alert('Message sent successfully!');
-        } catch (error) {
-            console.error('Contact form error:', error);
-            alert(`Failed to send message: ${error.message}`);
-        } finally {
-            isSubmitting(false);
-        }
-    };
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
