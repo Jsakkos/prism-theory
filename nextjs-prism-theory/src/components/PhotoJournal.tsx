@@ -6,7 +6,6 @@ import { urlForImage } from '@/sanity/lib/image';
 import { format } from 'date-fns';
 import Navigation from './Navigation';
 import ContactForm from './ContactForm';
-import { Settings } from 'lucide-react';
 
 interface Photo {
     _id: string;
@@ -58,7 +57,7 @@ export default function PhotoJournal({ photos, settings }: PhotoJournalProps) {
                 setIsContactOpen(false);
                 alert('Message sent successfully!');
             }
-        } catch (error) {
+        } catch {
             alert('Failed to send message. Please try again.');
         }
         setIsSubmitting(false);
