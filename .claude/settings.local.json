@@ -5,7 +5,10 @@
       "Bash(node export-sanity-data.js:*)",
       "Bash(npm install:*)",
       "Bash(npm uninstall:*)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(npm run lint)",
+      "Bash(npx eslint .)",
+      "Bash(npm run build:*)"
     ]
   }
 }

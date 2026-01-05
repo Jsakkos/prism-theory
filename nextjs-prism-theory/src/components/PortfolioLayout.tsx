@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { getPhotoUrl, getLogoUrl } from '@/lib/image-helpers';
+import { getPhotoUrl } from '@/lib/image-helpers';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import Masonry from 'react-masonry-css';

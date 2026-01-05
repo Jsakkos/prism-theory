@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { getPhotoUrl, getLogoUrl } from '@/lib/image-helpers';
+import { getPhotoUrl } from '@/lib/image-helpers';
 import { format } from 'date-fns';
 import Navigation from './Navigation';
 import ContactForm from './ContactForm';
