@@ -4,17 +4,10 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Camera, Menu, X } from 'lucide-react';
-import { urlForImage } from '@/sanity/lib/image';
-
-interface SanityImage {
-    asset: {
-        _ref: string;
-        _type: 'reference';
-    };
-}
+import { getLogoUrl } from '@/lib/image-helpers';
 
 interface NavigationProps {
-    logo?: SanityImage;
+    logo?: string;
     title: string;
     isMenuOpen: boolean;
     setIsMenuOpen: (value: boolean) => void;
@@ -45,7 +38,7 @@ export default function Navigation({
                         {logo ? (
                             <div className="relative w-200 h-200">
                                 <Image
-                                    src={urlForImage(logo).width(200).height(200).url()}
+                                    src={getLogoUrl(logo) || ''}
                                     alt={title}
                                     width={200}
                                     height={200}

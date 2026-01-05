@@ -1,25 +1,12 @@
-import { groq } from 'next-sanity'
-import { client } from '@/sanity/client'
 import PhotoJournal from '@/components/PhotoJournal'
+import { photos } from '@/data/photos'
+import { siteSettings } from '@/data/settings'
 
-const query = groq`{
-  "photos": *[_type == "photo"] | order(dateTaken desc) {
-    _id,
-    title,
-    image,
-    dateTaken,
-    location,
-    description,
-    alt
-  },
-  "settings": *[_type == "siteSettings"][0] {
-    title,
-    description,
-    logo
-  }
-}`
+export default function JournalPage() {
+    // Sort photos by dateTaken in descending order
+    const sortedPhotos = [...photos].sort((a, b) =>
+        new Date(b.dateTaken).getTime() - new Date(a.dateTaken).getTime()
+    );
 
-export default async function JournalPage() {
-    const data = await client.fetch(query)
-    return <PhotoJournal photos={data.photos} settings={data.settings} />
+    return <PhotoJournal photos={sortedPhotos} settings={siteSettings} />
 }

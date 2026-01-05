@@ -1,0 +1,14 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  
+  <path stroke-width="2" stroke="#333333" fill="none" d="M100 40 L173.2 160 L26.8 160 Z"></path>
+  
+  
+  <path stroke-width="1.5" stroke="#666666" fill="none" d="M60 160 L100 100 L140 160"></path>
+  <path stroke-width="1.5" stroke="#666666" fill="none" d="M80 160 L120 80 L160 160"></path>
+  <path stroke-width="1.5" stroke="#666666" fill="none" d="M40 160 L80 120 L120 160"></path>
+        
+  
+  <text fill="#333333" text-anchor="middle" font-size="24" font-family="Helvetica, Arial, sans-serif" y="190" x="100">
+    PRISM THEORY
+  </text>
+</svg>

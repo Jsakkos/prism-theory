@@ -2,35 +2,28 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { urlForImage } from '@/sanity/lib/image';
+import { getPhotoUrl, getLogoUrl } from '@/lib/image-helpers';
 import { format } from 'date-fns';
 import Navigation from './Navigation';
 import ContactForm from './ContactForm';
 
 interface Photo {
-    _id: string;
+    id: string;
+    filename: string;
     title: string;
-    image: {
-        asset: {
-            _ref: string;
-            _type: 'reference';
-        };
-    };
-    dateTaken: string; // Now in YYYY-MM-DD format
+    category: 'landscape' | 'minimalist';
+    alt: string;
+    dateTaken: string;
     location: string;
     description?: string;
-    alt: string;
+    width: number;
+    height: number;
 }
-interface SanityImage {
-    asset: {
-        _ref: string;
-        _type: 'reference';
-    };
-}
+
 interface SiteSettings {
-    logo?: SanityImage;
     title: string;
-    description?: string;
+    description: string;
+    logoFilename?: string;
 }
 interface PhotoJournalProps {
     photos: Photo[];
@@ -68,7 +61,7 @@ export default function PhotoJournal({ photos, settings }: PhotoJournalProps) {
         <div className="flex min-h-screen bg-gray-50">
             <Navigation
                 title="Photo Journal"
-                logo={settings.logo}
+                logo={settings.logoFilename}
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
                 setIsContactOpen={setIsContactOpen}
@@ -85,7 +78,7 @@ export default function PhotoJournal({ photos, settings }: PhotoJournalProps) {
                         <div className="space-y-12">
                             {photos.map((photo, index) => (
                                 <div
-                                    key={photo._id}
+                                    key={photo.id}
                                     className={`relative flex flex-col md:flex-row ${index % 2 === 0 ? 'md:flex-row-reverse' : ''
                                         } items-center gap-8`}
                                 >
@@ -97,7 +90,7 @@ export default function PhotoJournal({ photos, settings }: PhotoJournalProps) {
                                         <div className="bg-white rounded-lg shadow-md overflow-hidden">
                                             <div className="relative aspect-[4/3]">
                                                 <Image
-                                                    src={urlForImage(photo.image).width(800).height(600).url()}
+                                                    src={getPhotoUrl(photo.filename)}
                                                     alt={photo.alt}
                                                     fill
                                                     className="object-cover"

@@ -2,33 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { urlForImage } from '@/sanity/lib/image';
+import { getPhotoUrl, getLogoUrl } from '@/lib/image-helpers';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import Masonry from 'react-masonry-css';
 import Navigation from './Navigation';
 import ContactForm from './ContactForm';
 
 type Category = 'all' | 'landscape' | 'minimalist';
 
-interface SanityImage {
-    asset: {
-        _ref: string;
-        _type: 'reference';
-    };
-}
-
 interface Photo {
-    _id: string;
+    id: string;
+    filename: string;
     title: string;
     category: 'landscape' | 'minimalist';
-    image: SanityImage;
     alt: string;
+    dateTaken: string;
+    location: string;
+    description?: string;
+    width: number;
+    height: number;
 }
 
 interface SiteSettings {
-    logo?: SanityImage;
     title: string;
-    description?: string;
+    description: string;
+    logoFilename?: string;
 }
 
 interface PortfolioLayoutProps {
@@ -53,11 +52,11 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
         : photos.filter(photo => photo.category === selectedCategory);
 
     const lightboxPhotos = filteredPhotos.map(photo => ({
-        src: urlForImage(photo.image).url(),
+        src: getPhotoUrl(photo.filename),
         alt: photo.alt,
         title: photo.title,
-        width: 2400,
-        height: 1600
+        width: photo.width,
+        height: photo.height
     }));
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -81,10 +80,16 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
         setIsSubmitting(false);
     };
 
+    const breakpointColumns = {
+        default: 3,
+        1280: 2,
+        768: 1
+    };
+
     return (
         <div className="flex min-h-screen bg-gray-50">
             <Navigation
-                logo={settings.logo}
+                logo={settings.logoFilename}
                 title={settings.title}
                 isMenuOpen={isMenuOpen}
                 setIsMenuOpen={setIsMenuOpen}
@@ -94,29 +99,29 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
             />
 
             <main className="flex-1 p-4 md:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 auto-rows-max [&:has(*:hover)>*:not(:hover)]:opacity-50">
+                <Masonry
+                    breakpointCols={breakpointColumns}
+                    className="masonry-grid"
+                    columnClassName="masonry-grid-column"
+                >
                     {filteredPhotos.map((photo, index) => (
                         <div
-                            key={photo._id}
-                            className="group relative w-full h-auto overflow-hidden bg-gray-100 rounded-lg cursor-pointer transition-opacity duration-300"
+                            key={photo.id}
+                            className="group relative w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer transition-opacity duration-300"
                             onClick={() => setLightboxIndex(index)}
                         >
-                            <div className="relative aspect-[4/3]">
-                                <Image
-                                    src={urlForImage(photo.image).width(1200).height(900).url()}
-                                    alt={photo.alt}
-                                    width={1200}
-                                    height={900}
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                                    loading="lazy"
-                                    placeholder="blur"
-                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/2wBDAR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-                                />
-                            </div>
+                            <Image
+                                src={getPhotoUrl(photo.filename)}
+                                alt={photo.alt}
+                                width={photo.width}
+                                height={photo.height}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                                className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                                loading="lazy"
+                            />
                         </div>
                     ))}
-                </div>
+                </Masonry>
             </main>
 
             <ContactForm

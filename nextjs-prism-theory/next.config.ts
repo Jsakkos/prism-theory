@@ -2,14 +2,7 @@ import type { NextConfig } from "next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
-      },
-    ],
-  },
+  // No remote image patterns needed - using local images
 }
 
 module.exports = nextConfig
