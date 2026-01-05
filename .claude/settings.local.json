@@ -8,7 +8,15 @@
       "Bash(npm run dev)",
       "Bash(npm run lint)",
       "Bash(npx eslint .)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm audit fix:*)",
+      "Bash(node_modules.binnext lint:*)",
+      "Bash(node node_modules/next/dist/bin/next lint:*)",
+      "Bash(npm run lint:*)",
+      "Bash(if exist \".next\" rmdir /s /q \".next\")",
+      "Bash(if exist \".eslintcache\" del /q \".eslintcache\")",
+      "Bash(npx next lint:*)"
     ]
   }
 }
