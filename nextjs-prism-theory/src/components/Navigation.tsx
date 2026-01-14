@@ -36,7 +36,7 @@ export default function Navigation({
                         onClick={() => setSelectedCategory?.('all')}
                     >
                         {logo ? (
-                            <div className="relative w-200 h-200">
+                            <div className="relative w-[200px] h-[200px]">
                                 <Image
                                     src={getLogoUrl(logo) || ''}
                                     alt={title}
@@ -69,12 +69,6 @@ export default function Navigation({
                                 </button>
                             </>
                         )}
-                        <Link
-                            href="/journal"
-                            className="px-2 py-1 text-gray-600 hover:text-gray-900"
-                        >
-                            Photo Journal
-                        </Link>
                         <button
                             onClick={() => setIsContactOpen(true)}
                             className="px-2 py-1 text-gray-600 hover:text-gray-900"

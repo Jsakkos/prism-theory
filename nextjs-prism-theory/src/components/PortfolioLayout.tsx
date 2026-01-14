@@ -56,22 +56,30 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
         alt: photo.alt,
         title: photo.title,
         width: photo.width,
-        height: photo.height
+        height: photo.height,
+        location: photo.location,
+        dateTaken: photo.dateTaken,
+        description: photo.description
     }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('https://formspree.io/f/xreegnoj', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(formData),
             });
             if (response.ok) {
                 setFormData({ name: '', email: '', message: '' });
                 setIsContactOpen(false);
                 alert('Message sent successfully!');
+            } else {
+                throw new Error('Failed to send');
             }
         } catch (err) {
             console.error('Failed to send message:', err);
@@ -119,6 +127,14 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
                                 className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
                                 loading="lazy"
                             />
+                            {/* Hover metadata overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                                <h3 className="text-white font-semibold text-lg">{photo.title}</h3>
+                                {photo.location && (
+                                    <p className="text-white/80 text-sm">{photo.location}</p>
+                                )}
+                                <p className="text-white/60 text-sm">{new Date(photo.dateTaken).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</p>
+                            </div>
                         </div>
                     ))}
                 </Masonry>
@@ -139,15 +155,35 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ photos, settings }) =
                 index={lightboxIndex}
                 slides={lightboxPhotos}
                 render={{
-                    slide: ({ slide }) => (
-                        <Image
-                            src={slide.src}
-                            alt={slide.alt || ''}
-                            width={2400}
-                            height={1600}
-                            style={{ objectFit: 'contain', width: '100%', height: '100%' }}
-                        />
-                    )
+                    slide: ({ slide }) => {
+                        const slideData = slide as typeof lightboxPhotos[number];
+                        return (
+                            <div className="flex flex-col items-center justify-center w-full h-full">
+                                <div className="relative flex-1 w-full flex items-center justify-center" style={{ maxHeight: 'calc(100% - 100px)' }}>
+                                    <Image
+                                        src={slide.src}
+                                        alt={slide.alt || ''}
+                                        width={2400}
+                                        height={1600}
+                                        style={{ objectFit: 'contain', maxWidth: '100%', maxHeight: '100%' }}
+                                    />
+                                </div>
+                                <div className="w-full text-center py-4 px-6 bg-black/50">
+                                    <h3 className="text-white font-semibold text-xl">{slideData.title}</h3>
+                                    <div className="text-white/80 text-sm mt-1">
+                                        {slideData.location && <span>{slideData.location}</span>}
+                                        {slideData.location && slideData.dateTaken && <span className="mx-2">•</span>}
+                                        {slideData.dateTaken && (
+                                            <span>{new Date(slideData.dateTaken).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</span>
+                                        )}
+                                    </div>
+                                    {slideData.description && (
+                                        <p className="text-white/70 text-sm mt-2 max-w-2xl mx-auto">{slideData.description}</p>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    }
                 }}
             />
         </div>
